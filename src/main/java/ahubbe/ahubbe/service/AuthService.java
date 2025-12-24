@@ -1,6 +1,7 @@
 package ahubbe.ahubbe.service;
 
 import ahubbe.ahubbe.dto.JwtToken;
+import ahubbe.ahubbe.entity.Role;
 import ahubbe.ahubbe.entity.User;
 import ahubbe.ahubbe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class AuthService {
         User newUser = new User();
         newUser.setId(id);
         newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setRole(Role.ROLE_USER);
         userRepository.save(newUser);
     }
 
