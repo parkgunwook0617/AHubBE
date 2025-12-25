@@ -22,6 +22,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public void registerUser(String id, String password) {
+        if (userRepository.findById(id).isPresent()) {
+            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+        }
         User newUser = new User();
         newUser.setId(id);
         newUser.setPassword(passwordEncoder.encode(password));

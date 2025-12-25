@@ -80,7 +80,9 @@ public class JwtTokenProvider {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parsePlaintextJws(token);
+                    .parseClaimsJws(token);
+
+            return true;
         } catch (Exception e) {
         }
         return false;
