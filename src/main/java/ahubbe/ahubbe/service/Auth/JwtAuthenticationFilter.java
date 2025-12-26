@@ -1,4 +1,4 @@
-package ahubbe.ahubbe.service;
+package ahubbe.ahubbe.service.Auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

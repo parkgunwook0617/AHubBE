@@ -47,6 +47,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.jsoup:jsoup:1.21.2'
 }
 
 tasks.named('test') {

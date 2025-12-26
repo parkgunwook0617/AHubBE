@@ -1,4 +1,4 @@
-package ahubbe.ahubbe.service;
+package ahubbe.ahubbe.service.Auth;
 
 import ahubbe.ahubbe.dto.JwtToken;
 import io.jsonwebtoken.Claims;
