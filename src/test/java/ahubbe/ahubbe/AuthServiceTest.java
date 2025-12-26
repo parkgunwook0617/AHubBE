@@ -2,8 +2,8 @@ package ahubbe.ahubbe;
 
 import ahubbe.ahubbe.dto.JwtToken;
 import ahubbe.ahubbe.repository.UserRepository;
-import ahubbe.ahubbe.service.AuthService;
-import ahubbe.ahubbe.service.JwtTokenProvider;
+import ahubbe.ahubbe.service.Auth.AuthService;
+import ahubbe.ahubbe.service.Auth.JwtTokenProvider;
 import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -1,11 +1,10 @@
-package ahubbe.ahubbe.service;
+package ahubbe.ahubbe.service.Auth;
 
 import ahubbe.ahubbe.dto.JwtToken;
 import ahubbe.ahubbe.entity.Role;
 import ahubbe.ahubbe.entity.User;
 import ahubbe.ahubbe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;

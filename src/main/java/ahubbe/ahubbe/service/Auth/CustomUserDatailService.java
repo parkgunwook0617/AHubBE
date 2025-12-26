@@ -1,4 +1,4 @@
-package ahubbe.ahubbe.service;
+package ahubbe.ahubbe.service.Auth;
 
 import ahubbe.ahubbe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
