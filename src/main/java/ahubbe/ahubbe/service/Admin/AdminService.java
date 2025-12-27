@@ -7,15 +7,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AdminService {
@@ -117,5 +116,38 @@ public class AdminService {
         }
 
         return adminRepository.saveAll(resultList);
+    }
+
+    @Transactional
+    public AnimationInformation saveSingleAnimeData(AnimeDto animeDto, String year, String quarter) {
+        AnimationInformation animation = new AnimationInformation();
+
+        if(adminRepository.findByTitle(animeDto.getTitle()).isPresent()) {
+            Set<Integer> releaseYear = new HashSet<>();
+            Set<Integer> releaseQuarter = new HashSet<>();
+
+            releaseYear.addAll(adminRepository.findByTitle(animeDto.getTitle()).get().getReleaseYear());
+            releaseQuarter.addAll(adminRepository.findByTitle(animeDto.getTitle()).get().getReleasequarter());
+
+            releaseYear.add(Integer.parseInt(year));
+            releaseQuarter.add(Integer.parseInt(quarter));
+
+            animation.setReleaseYear(new ArrayList<>(releaseYear));
+            animation.setReleasequarter(new ArrayList<>(releaseQuarter));
+
+            adminRepository.deleteByTitle(animeDto.getTitle());
+        } else {
+            animation.setReleaseYear(List.of(Integer.parseInt(year)));
+            animation.setReleasequarter(List.of(Integer.parseInt(quarter)));
+
+
+        }
+
+        animation.setTitle(animeDto.getTitle());
+        animation.setKeyVisual(animeDto.getKeyVisual());
+        animation.setGenreList(animeDto.getGenreList());
+
+        adminRepository.save(animation);
+        return animation;
     }
 }
