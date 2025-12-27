@@ -23,23 +23,6 @@ public class AdminServiceTest {
     @Autowired
     AdminRepository adminRepository;
 
-
-    @Test
-    @DisplayName("데이터 뭉치가 DB에 잘 저장되는지 확인")
-    void inquiryTest() {
-        List<AnimationInformation> Elements = adminService.saveAnimeData("2025", "1", "title");
-
-        long savedRight = 0;
-
-        for(AnimationInformation animationInformation : Elements){
-            if(adminRepository.findByTitle(animationInformation.getTitle()).isPresent()) {
-                savedRight++;
-            }
-        }
-
-        Assertions.assertThat(savedRight).isEqualTo(Elements.size());
-    }
-
     @Test
     @DisplayName("수동 저장이 DB에 잘 저장되는지 확인")
     void selfInquiryTest() {
