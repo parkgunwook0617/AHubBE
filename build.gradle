@@ -25,12 +25,13 @@ jacoco {
 }
 
 spotless {
+    lineEndings 'UNIX'
+
     java {
         googleJavaFormat().aosp()
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
-        lineEndings 'UNIX'
     }
 }
 
