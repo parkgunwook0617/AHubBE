@@ -32,9 +32,11 @@ public class AuthService {
     }
 
     public JwtToken signIn(String id, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(id, password);
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        Authentication authentication =
+                authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 

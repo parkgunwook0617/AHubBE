@@ -1,15 +1,14 @@
 package ahubbe.ahubbe.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Entity
 public class User {
@@ -18,13 +17,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long identifier;
 
-    @Setter
-    @Getter
-    private String id;
+    @Setter @Getter private String id;
 
-    @Setter
-    @Getter
-    private String password;
+    @Setter @Getter private String password;
 
     public User() {}
 
@@ -37,8 +32,7 @@ public class User {
     @JoinTable(
             name = "user_favorite_animations",
             joinColumns = @JoinColumn(name = "user_identifier"),
-            inverseJoinColumns = @JoinColumn(name = "animation_identifier")
-    )
+            inverseJoinColumns = @JoinColumn(name = "animation_identifier"))
     @Getter
     @Setter
     private List<AnimationInformation> favoriteAnimations = new ArrayList<>();

@@ -15,14 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class AuthServiceTest {
 
-    @Autowired
-    private AuthService authService;
+    @Autowired private AuthService authService;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    @Autowired private JwtTokenProvider jwtTokenProvider;
 
     @Test
     @DisplayName("회원가입시 데이터가 DB에 잘 저장되는지 확인")

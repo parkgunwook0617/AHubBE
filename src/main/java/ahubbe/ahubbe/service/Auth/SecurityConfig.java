@@ -22,18 +22,25 @@ public class SecurityConfig {
         httpSecurity
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/**").permitAll()
-                        .requestMatchers(
-                                        "/v3/api-docs/**",    // API 명세 JSON 경로
-                                        "/swagger-ui/**",     // Swagger UI 리소스
-                                        "/swagger-ui.html"    // Swagger UI 접속 페이지
-                                ).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(
+                        auth ->
+                                auth.requestMatchers("/auth/**")
+                                        .permitAll()
+                                        .requestMatchers("/admin/**")
+                                        .permitAll()
+                                        .requestMatchers(
+                                                "/v3/api-docs/**", // API 명세 JSON 경로
+                                                "/swagger-ui/**", // Swagger UI 리소스
+                                                "/swagger-ui.html" // Swagger UI 접속 페이지
+                                                )
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated())
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
