@@ -9,5 +9,4 @@ public class AHubBeApplication {
     public static void main(String[] args) {
         SpringApplication.run(AHubBeApplication.class, args);
     }
-
 }

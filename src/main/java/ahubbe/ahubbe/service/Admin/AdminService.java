@@ -3,18 +3,15 @@ package ahubbe.ahubbe.service.Admin;
 import ahubbe.ahubbe.dto.AnimeDto;
 import ahubbe.ahubbe.entity.AnimationInformation;
 import ahubbe.ahubbe.repository.AdminRepository;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 @Service
 public class AdminService {
@@ -48,7 +45,12 @@ public class AdminService {
     }
 
     public List<AnimeDto> getAnimeDetailElements(String Year, String quarter, String targetTag) {
-        String URL = "https://namu.wiki/w/" + URLEncoder.encode("분류:" +Year + "년 " + quarter + "분기 일본 애니메이션", StandardCharsets.UTF_8).replace("+", "%20");
+        String URL =
+                "https://namu.wiki/w/"
+                        + URLEncoder.encode(
+                                        "분류:" + Year + "년 " + quarter + "분기 일본 애니메이션",
+                                        StandardCharsets.UTF_8)
+                                .replace("+", "%20");
         Elements animeAddress = getAnimeElements(URL, targetTag);
         List<AnimeDto> resultList = new ArrayList<>();
 
@@ -56,16 +58,22 @@ public class AdminService {
             try {
                 Document DetailAnimePage = getHtml("https://namu.wiki" + el.attr("href"));
                 String title = el.attr("title");
-                String keyVisual = "https:" + DetailAnimePage.select("table > tbody > tr > td > div > span > span > img").get(1).attr("data-src");
-                Elements genre = DetailAnimePage.select("tr:has(td:contains(장르)) > td:nth-child(2) a");
+                String keyVisual =
+                        "https:"
+                                + DetailAnimePage.select(
+                                                "table > tbody > tr > td > div > span > span > img")
+                                        .get(1)
+                                        .attr("data-src");
+                Elements genre =
+                        DetailAnimePage.select("tr:has(td:contains(장르)) > td:nth-child(2) a");
                 if (genre.isEmpty()) {
                     genre = DetailAnimePage.select("tr:has(td:contains(장르)) > td:nth-child(2) div");
                 }
-                List<String> genreList = genre.eachText()
-                        .stream()
-                        .map(String::trim)
-                        .filter(s -> !s.isEmpty())
-                        .toList();
+                List<String> genreList =
+                        genre.eachText().stream()
+                                .map(String::trim)
+                                .filter(s -> !s.isEmpty())
+                                .toList();
                 resultList.add(new AnimeDto(title, keyVisual, genreList));
             } catch (Exception ignored) {
             }
@@ -87,12 +95,14 @@ public class AdminService {
             animation.setKeyVisual(dto.getKeyVisual());
             animation.setGenreList(dto.getGenreList());
 
-            if(adminRepository.findByTitle(dto.getTitle()).isPresent()) {
+            if (adminRepository.findByTitle(dto.getTitle()).isPresent()) {
                 Set<Integer> releaseYear = new HashSet<>();
                 Set<Integer> releaseQuarter = new HashSet<>();
 
-                releaseYear.addAll(adminRepository.findByTitle(dto.getTitle()).get().getReleaseYear());
-                releaseQuarter.addAll(adminRepository.findByTitle(dto.getTitle()).get().getReleasequarter());
+                releaseYear.addAll(
+                        adminRepository.findByTitle(dto.getTitle()).get().getReleaseYear());
+                releaseQuarter.addAll(
+                        adminRepository.findByTitle(dto.getTitle()).get().getReleasequarter());
 
                 releaseYear.add(Integer.parseInt(year));
                 releaseQuarter.add(Integer.parseInt(quarter));
@@ -103,7 +113,7 @@ public class AdminService {
                 adminRepository.deleteByTitle(dto.getTitle());
             } else {
                 List<Integer> releaseYear = new ArrayList<>();
-                List<Integer> releaseQuarter =  new ArrayList<>();
+                List<Integer> releaseQuarter = new ArrayList<>();
 
                 releaseYear.add(Integer.parseInt(year));
                 releaseQuarter.add(Integer.parseInt(quarter));
@@ -119,15 +129,18 @@ public class AdminService {
     }
 
     @Transactional
-    public AnimationInformation saveSingleAnimeData(AnimeDto animeDto, String year, String quarter) {
+    public AnimationInformation saveSingleAnimeData(
+            AnimeDto animeDto, String year, String quarter) {
         AnimationInformation animation = new AnimationInformation();
 
-        if(adminRepository.findByTitle(animeDto.getTitle()).isPresent()) {
+        if (adminRepository.findByTitle(animeDto.getTitle()).isPresent()) {
             Set<Integer> releaseYear = new HashSet<>();
             Set<Integer> releaseQuarter = new HashSet<>();
 
-            releaseYear.addAll(adminRepository.findByTitle(animeDto.getTitle()).get().getReleaseYear());
-            releaseQuarter.addAll(adminRepository.findByTitle(animeDto.getTitle()).get().getReleasequarter());
+            releaseYear.addAll(
+                    adminRepository.findByTitle(animeDto.getTitle()).get().getReleaseYear());
+            releaseQuarter.addAll(
+                    adminRepository.findByTitle(animeDto.getTitle()).get().getReleasequarter());
 
             releaseYear.add(Integer.parseInt(year));
             releaseQuarter.add(Integer.parseInt(quarter));
@@ -139,8 +152,6 @@ public class AdminService {
         } else {
             animation.setReleaseYear(List.of(Integer.parseInt(year)));
             animation.setReleasequarter(List.of(Integer.parseInt(quarter)));
-
-
         }
 
         animation.setTitle(animeDto.getTitle());
