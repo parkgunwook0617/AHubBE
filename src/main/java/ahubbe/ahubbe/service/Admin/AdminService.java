@@ -24,7 +24,13 @@ public class AdminService {
     public Document getHtml(String URL) {
         Document doc;
         try {
-            doc = Jsoup.connect(URL).get();
+            doc =
+                    Jsoup.connect(URL)
+                            .userAgent(
+                                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                            .header("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7")
+                            .header("Referer", "https://www.google.com/")
+                            .get();
             return doc;
         } catch (Exception e) {
             throw new RuntimeException(e);
