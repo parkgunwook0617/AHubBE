@@ -6,10 +6,10 @@ import ahubbe.ahubbe.repository.AdminRepository;
 import ahubbe.ahubbe.service.Admin.AdminService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin")
@@ -19,13 +19,19 @@ public class AdminController {
     private final AdminRepository adminRepository;
 
     @GetMapping(path = "/inquiry")
-    public List<AnimationInformation> inquiry(String year, String quarter) {
-        return adminService.saveAnimeData(year, quarter, "title");
+    public List<AnimeDto> inquiry(String year, String quarter) {
+        return adminService.getAnimeDetailElements(year, quarter, "title");
     }
 
     @GetMapping(path = "/selfInquiry")
-    public AnimationInformation selfInquiry(
-            @ModelAttribute AnimeDto animeDto, String year, String quarter) {
-        return adminService.saveSingleAnimeData(animeDto, year, quarter);
+    public AnimationInformation selfInquiry(AnimeDto animeDto, String year, String quarter) {
+        return adminService.saveSingleAnimeData(animeDto, quarter, "title");
+    }
+
+    @PostMapping(path = "/animeDataUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<List<AnimationInformation>> uploadJSON(
+            @RequestPart("file") MultipartFile file, String year, String quarter) {
+        List<AnimationInformation> result = adminService.saveAnimeData(file, year, quarter);
+        return ResponseEntity.ok(result);
     }
 }
