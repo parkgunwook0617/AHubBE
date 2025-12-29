@@ -1,0 +1,44 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Connect deploy key
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          project: ss944161269441/ahubbe
+          stage: main
+          yaml: >
+            name: ahubbe
+
+            app: java@17
+
+            options:
+              ports: 8080
+              env:
+                - name: DB_URL
+                  value: jdbc:mysql://mariadb:3306/ahub_db
+                - name: DB_ID
+                  value: root
+                - name: DB_PASSWORD
+                  value: $${{ secrets.DB_PASSWORD }}
+                - name: JWT_SECRET
+                  value: $${{ secrets.JWT_SECRET }}
+              buildenv: []
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
+              preset: java-springboot
