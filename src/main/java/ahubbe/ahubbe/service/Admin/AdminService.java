@@ -3,23 +3,26 @@ package ahubbe.ahubbe.service.Admin;
 import ahubbe.ahubbe.dto.AnimeDto;
 import ahubbe.ahubbe.entity.AnimationInformation;
 import ahubbe.ahubbe.repository.AdminRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@AllArgsConstructor
 public class AdminService {
     private final AdminRepository adminRepository;
-
-    public AdminService(AdminRepository adminRepository) {
-        this.adminRepository = adminRepository;
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public Document getHtml(String URL) {
         Document doc;
@@ -89,11 +92,22 @@ public class AdminService {
     }
 
     @Transactional
-    public List<AnimationInformation> saveAnimeData(String year, String quarter, String targetTag) {
-        List<AnimeDto> AnimeDetailElements = getAnimeDetailElements(year, quarter, targetTag);
+    public List<AnimationInformation> saveAnimeData(
+            MultipartFile file, String year, String quarter) {
+        List<AnimeDto> animeDetailElements;
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            animeDetailElements =
+                    objectMapper.readValue(
+                            file.getInputStream(), new TypeReference<List<AnimeDto>>() {});
+        } catch (IOException e) {
+            throw new RuntimeException("JSON 읽기 실패: " + e.getMessage());
+        }
+
         List<AnimationInformation> resultList = new ArrayList<>();
 
-        for (AnimeDto dto : AnimeDetailElements) {
+        for (AnimeDto dto : animeDetailElements) {
 
             AnimationInformation animation = new AnimationInformation();
 
