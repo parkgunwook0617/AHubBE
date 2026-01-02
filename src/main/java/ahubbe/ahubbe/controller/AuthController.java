@@ -2,8 +2,11 @@ package ahubbe.ahubbe.controller;
 
 import ahubbe.ahubbe.dto.JwtToken;
 import ahubbe.ahubbe.service.Auth.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +27,20 @@ public class AuthController {
     }
 
     @GetMapping(path = "/signIn")
-    public JwtToken signin(String id, String password) {
-        return authService.signIn(id, password);
+    public ResponseEntity<String> signin(String id, String password, HttpServletResponse response) {
+        JwtToken jwtToken = authService.signIn(id, password);
+
+        ResponseCookie cookie =
+                ResponseCookie.from("accessToken", jwtToken.getAccessToken())
+                        .httpOnly(true)
+                        .secure(true)
+                        .sameSite("None")
+                        .path("/")
+                        .maxAge(60 * 60)
+                        .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.ok("로그인 성공");
     }
 }
