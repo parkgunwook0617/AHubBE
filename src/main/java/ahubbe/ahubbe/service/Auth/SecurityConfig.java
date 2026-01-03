@@ -30,7 +30,7 @@ public class SecurityConfig {
                                                     new org.springframework.web.cors
                                                             .CorsConfiguration();
                                             corsConfiguration.setAllowedOrigins(
-                                                    java.util.List.of("http://localhost:3000"));
+                                                    java.util.List.of("http://localhost:5173"));
                                             corsConfiguration.setAllowedMethods(
                                                     java.util.List.of(
                                                             "GET", "POST", "PUT", "DELETE",
