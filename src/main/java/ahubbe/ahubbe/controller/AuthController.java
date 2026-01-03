@@ -1,5 +1,6 @@
 package ahubbe.ahubbe.controller;
 
+import ahubbe.ahubbe.dto.AuthDto;
 import ahubbe.ahubbe.dto.JwtToken;
 import ahubbe.ahubbe.service.Auth.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,10 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,14 +19,15 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(path = "/register")
-    public ResponseEntity register(String id, String password) {
-        authService.registerUser(id, password);
+    public ResponseEntity register(@RequestBody AuthDto requestDto) {
+        authService.registerUser(requestDto.getId(), requestDto.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
     }
 
-    @GetMapping(path = "/signIn")
-    public ResponseEntity<String> signin(String id, String password, HttpServletResponse response) {
-        JwtToken jwtToken = authService.signIn(id, password);
+    @PostMapping(path = "/signIn")
+    public ResponseEntity<String> signin(
+            @RequestBody AuthDto requestDto, HttpServletResponse response) {
+        JwtToken jwtToken = authService.signIn(requestDto.getId(), requestDto.getPassword());
 
         ResponseCookie cookie =
                 ResponseCookie.from("accessToken", jwtToken.getAccessToken())
