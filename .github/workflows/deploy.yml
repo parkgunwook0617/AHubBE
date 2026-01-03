@@ -33,9 +33,9 @@ jobs:
                 - name: DB_ID
                   value: root
                 - name: DB_PASSWORD
-                  value: $${{ secrets.DB_PASSWORD }}
+                  value: ${{ secrets.DB_PASSWORD }}
                 - name: JWT_SECRET
-                  value: $${{ secrets.JWT_SECRET }}
+                  value: ${{ secrets.JWT_SECRET }}
               buildenv: []
             context:
               git:
