@@ -1,7 +1,7 @@
 package ahubbe.ahubbe;
 
 import ahubbe.ahubbe.dto.AnimeDto;
-import ahubbe.ahubbe.repository.AdminRepository;
+import ahubbe.ahubbe.repository.AnimationRepository;
 import ahubbe.ahubbe.service.Admin.AdminService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +16,7 @@ public class AdminServiceTest {
 
     @Autowired AdminService adminService;
 
-    @Autowired AdminRepository adminRepository;
+    @Autowired AnimationRepository animationRepository;
 
     @Test
     @DisplayName("수동 저장이 DB에 잘 저장되는지 확인")
