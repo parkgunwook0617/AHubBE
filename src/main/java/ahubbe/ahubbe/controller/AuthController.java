@@ -3,6 +3,7 @@ package ahubbe.ahubbe.controller;
 import ahubbe.ahubbe.dto.AuthDto;
 import ahubbe.ahubbe.dto.JwtToken;
 import ahubbe.ahubbe.service.Auth.AuthService;
+import ahubbe.ahubbe.service.Auth.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping(path = "/register")
     public ResponseEntity register(@RequestBody AuthDto requestDto) {
@@ -41,5 +43,21 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return ResponseEntity.ok("로그인 성공");
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<?> validateToken(
+            @CookieValue(name = "accessToken", required = false) String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        boolean isValid = jwtTokenProvider.validateToken(token);
+
+        if (isValid) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }
