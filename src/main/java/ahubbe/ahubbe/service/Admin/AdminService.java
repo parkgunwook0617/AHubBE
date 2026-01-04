@@ -2,7 +2,7 @@ package ahubbe.ahubbe.service.Admin;
 
 import ahubbe.ahubbe.dto.AnimeDto;
 import ahubbe.ahubbe.entity.AnimationInformation;
-import ahubbe.ahubbe.repository.AdminRepository;
+import ahubbe.ahubbe.repository.AnimationRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @AllArgsConstructor
 public class AdminService {
-    private final AdminRepository adminRepository;
+    private final AnimationRepository animationRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public Document getHtml(String URL) {
@@ -115,22 +115,22 @@ public class AdminService {
             animation.setKeyVisual(dto.getKeyVisual());
             animation.setGenreList(dto.getGenreList());
 
-            if (adminRepository.findByTitle(dto.getTitle()).isPresent()) {
+            if (animationRepository.findByTitle(dto.getTitle()).isPresent()) {
                 Set<Integer> releaseYear = new HashSet<>();
                 Set<Integer> releaseQuarter = new HashSet<>();
 
                 releaseYear.addAll(
-                        adminRepository.findByTitle(dto.getTitle()).get().getReleaseYear());
+                        animationRepository.findByTitle(dto.getTitle()).get().getReleaseYear());
                 releaseQuarter.addAll(
-                        adminRepository.findByTitle(dto.getTitle()).get().getReleasequarter());
+                        animationRepository.findByTitle(dto.getTitle()).get().getReleaseQuarter());
 
                 releaseYear.add(Integer.parseInt(year));
                 releaseQuarter.add(Integer.parseInt(quarter));
 
                 animation.setReleaseYear(new ArrayList<>(releaseYear));
-                animation.setReleasequarter(new ArrayList<>(releaseQuarter));
+                animation.setReleaseQuarter(new ArrayList<>(releaseQuarter));
 
-                adminRepository.deleteByTitle(dto.getTitle());
+                animationRepository.deleteByTitle(dto.getTitle());
             } else {
                 List<Integer> releaseYear = new ArrayList<>();
                 List<Integer> releaseQuarter = new ArrayList<>();
@@ -139,13 +139,13 @@ public class AdminService {
                 releaseQuarter.add(Integer.parseInt(quarter));
 
                 animation.setReleaseYear(new ArrayList<>(releaseYear));
-                animation.setReleasequarter(new ArrayList<>(releaseQuarter));
+                animation.setReleaseQuarter(new ArrayList<>(releaseQuarter));
             }
 
             resultList.add(animation);
         }
 
-        return adminRepository.saveAll(resultList);
+        return animationRepository.saveAll(resultList);
     }
 
     @Transactional
@@ -153,32 +153,32 @@ public class AdminService {
             AnimeDto animeDto, String year, String quarter) {
         AnimationInformation animation = new AnimationInformation();
 
-        if (adminRepository.findByTitle(animeDto.getTitle()).isPresent()) {
+        if (animationRepository.findByTitle(animeDto.getTitle()).isPresent()) {
             Set<Integer> releaseYear = new HashSet<>();
             Set<Integer> releaseQuarter = new HashSet<>();
 
             releaseYear.addAll(
-                    adminRepository.findByTitle(animeDto.getTitle()).get().getReleaseYear());
+                    animationRepository.findByTitle(animeDto.getTitle()).get().getReleaseYear());
             releaseQuarter.addAll(
-                    adminRepository.findByTitle(animeDto.getTitle()).get().getReleasequarter());
+                    animationRepository.findByTitle(animeDto.getTitle()).get().getReleaseQuarter());
 
             releaseYear.add(Integer.parseInt(year));
             releaseQuarter.add(Integer.parseInt(quarter));
 
             animation.setReleaseYear(new ArrayList<>(releaseYear));
-            animation.setReleasequarter(new ArrayList<>(releaseQuarter));
+            animation.setReleaseQuarter(new ArrayList<>(releaseQuarter));
 
-            adminRepository.deleteByTitle(animeDto.getTitle());
+            animationRepository.deleteByTitle(animeDto.getTitle());
         } else {
             animation.setReleaseYear(List.of(Integer.parseInt(year)));
-            animation.setReleasequarter(List.of(Integer.parseInt(quarter)));
+            animation.setReleaseQuarter(List.of(Integer.parseInt(quarter)));
         }
 
         animation.setTitle(animeDto.getTitle());
         animation.setKeyVisual(animeDto.getKeyVisual());
         animation.setGenreList(animeDto.getGenreList());
 
-        adminRepository.save(animation);
+        animationRepository.save(animation);
         return animation;
     }
 }
