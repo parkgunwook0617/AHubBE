@@ -1,9 +1,6 @@
 package ahubbe.ahubbe.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,11 +14,11 @@ public class AnimationInformation {
 
     @Getter @Setter private String title;
 
-    @Getter @Setter private List<Integer> releaseYear;
+    @ElementCollection @Getter @Setter private List<Integer> releaseYear;
 
-    @Getter @Setter private List<Integer> releasequarter;
+    @ElementCollection @Getter @Setter private List<Integer> releaseQuarter;
 
     @Getter @Setter private String keyVisual;
 
-    @Getter @Setter private List<String> genreList;
+    @ElementCollection @Getter @Setter private List<String> genreList;
 }

@@ -2,7 +2,7 @@ package ahubbe.ahubbe.controller;
 
 import ahubbe.ahubbe.dto.AnimeDto;
 import ahubbe.ahubbe.entity.AnimationInformation;
-import ahubbe.ahubbe.repository.AdminRepository;
+import ahubbe.ahubbe.repository.AnimationRepository;
 import ahubbe.ahubbe.service.Admin.AdminService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
-    private final AdminRepository adminRepository;
+    private final AnimationRepository animationRepository;
 
     @GetMapping(path = "/inquiry")
     public List<AnimeDto> inquiry(String year, String quarter) {
