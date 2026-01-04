@@ -70,7 +70,7 @@ public class AdminService {
                 String keyVisual =
                         "https:"
                                 + DetailAnimePage.select(
-                                                "table > tbody > tr > td > div > span > span > img")
+                                                "table > tbody > tr:nth-child(2) > td > div > span > span > img")
                                         .get(1)
                                         .attr("data-src");
                 Elements genre =
