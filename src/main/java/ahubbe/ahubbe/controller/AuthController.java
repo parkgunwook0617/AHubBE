@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -58,6 +59,36 @@ public class AuthController {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @DeleteMapping("/resignUser")
+    public ResponseEntity<?> resignUser(@CookieValue(name = "accessToken") String token) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+
+        String userId = authentication.getName();
+
+        boolean response = authService.resignUser(userId);
+        if (response) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PatchMapping("/chagePassword")
+    public ResponseEntity<?> changePassword(
+            @CookieValue(name = "accessToken") String token, String newPassword) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+
+        String userId = authentication.getName();
+
+        boolean response = authService.changePassword(userId, newPassword);
+
+        if (response) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

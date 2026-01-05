@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +42,24 @@ public class AuthService {
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
         return jwtToken;
+    }
+
+    @Transactional
+    public boolean resignUser(String id) {
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null) return false;
+
+        userRepository.delete(user);
+        return true;
+    }
+
+    @Transactional
+    public boolean changePassword(String id, String newPassword) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return false;
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return true;
     }
 }

@@ -5,6 +5,7 @@ import ahubbe.ahubbe.repository.AnimationRepository;
 import ahubbe.ahubbe.service.User.UserService;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,8 +55,16 @@ public class UserController {
         return ResponseEntity.ok("성공적으로 저장되었습니다.");
     }
 
+    @DeleteMapping("/deleteFavorite")
+    public ResponseEntity<?> deleteFavoriteAnimationInformation(
+            @CookieValue(name = "accessToken") String token, String title) {
+        userService.removeFavorite(token, title);
+
+        return ResponseEntity.ok("성공적으로 제거되었습니다.");
+    }
+
     @GetMapping("/getFavorite")
-    public List<AnimationInformation> getFavoriteAnimationInformation(
+    public Set<AnimationInformation> getFavoriteAnimationInformation(
             @CookieValue(name = "accessToken") String token) {
         return userService.getFavorite(token);
     }
