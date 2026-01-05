@@ -2,6 +2,7 @@ package ahubbe.ahubbe.controller;
 
 import ahubbe.ahubbe.dto.AuthDto;
 import ahubbe.ahubbe.dto.JwtToken;
+import ahubbe.ahubbe.dto.RegisterDto;
 import ahubbe.ahubbe.service.Auth.AuthService;
 import ahubbe.ahubbe.service.Auth.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,14 +23,14 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping(path = "/register")
-    public ResponseEntity register(@RequestBody AuthDto requestDto) {
-        authService.registerUser(requestDto.getId(), requestDto.getPassword());
+    public ResponseEntity<?> register(@RequestBody RegisterDto requestDto) {
+        authService.registerUser(
+                requestDto.getId(), requestDto.getPassword(), requestDto.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
     }
 
     @PostMapping(path = "/signIn")
-    public ResponseEntity<String> signin(
-            @RequestBody AuthDto requestDto, HttpServletResponse response) {
+    public ResponseEntity<?> signin(@RequestBody AuthDto requestDto, HttpServletResponse response) {
         JwtToken jwtToken = authService.signIn(requestDto.getId(), requestDto.getPassword());
 
         ResponseCookie cookie =
@@ -121,6 +122,24 @@ public class AuthController {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/checkId")
+    public ResponseEntity<?> checkId(String id) {
+        if (authService.idCheck(id)) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok().build();
+        }
+    }
+
+    @GetMapping("/checkEmail")
+    public ResponseEntity<?> checkEmail(String email) {
+        if (authService.emailCheck(email)) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok().build();
         }
     }
 }
