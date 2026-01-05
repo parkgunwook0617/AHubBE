@@ -36,6 +36,10 @@ jobs:
                   value: ${{ secrets.DB_PASSWORD }}
                 - name: JWT_SECRET
                   value: ${{ secrets.JWT_SECRET }}
+                - name: EMAIL_APP_PASSWORD
+                  value: ${{ secrets.EMAIL_APP_PASSWORD }}
+                - name: PASSWORD_RESET_URL
+                  value: https://port-0-ahubbe-mjqorq623e753992.sel3.cloudtype.app/mail/reset-execute?token=
               buildenv: []
             context:
               git:
