@@ -24,10 +24,10 @@ public class MailService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("{PASSWORD_RESET_URL}")
+    @Value("$PASSWORD_RESET_URL}")
     private String passwordResetUrl;
 
-    @Value("{spring.mail.username}")
+    @Value("${spring.mail.username}")
     private static String senderEmail;
 
     public String createCode() {
