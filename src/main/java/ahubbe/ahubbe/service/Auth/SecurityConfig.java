@@ -34,7 +34,7 @@ public class SecurityConfig {
                                             corsConfiguration.setAllowedMethods(
                                                     java.util.List.of(
                                                             "GET", "POST", "PUT", "DELETE",
-                                                            "OPTIONS"));
+                                                            "OPTIONS", "PATCH"));
                                             corsConfiguration.setAllowedHeaders(
                                                     java.util.List.of("*"));
                                             corsConfiguration.setAllowCredentials(true);

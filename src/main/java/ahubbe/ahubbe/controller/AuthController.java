@@ -46,6 +46,22 @@ public class AuthController {
         return ResponseEntity.ok("로그인 성공");
     }
 
+    @PostMapping(path = "/signOut")
+    public ResponseEntity<?> signout(HttpServletResponse response) {
+        ResponseCookie cookie =
+                ResponseCookie.from("accessToken", "")
+                        .httpOnly(true)
+                        .secure(true)
+                        .sameSite("None")
+                        .path("/")
+                        .maxAge(0)
+                        .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.ok("로그아웃 성공");
+    }
+
     @PostMapping("/validate")
     public ResponseEntity<?> validateToken(
             @CookieValue(name = "accessToken", required = false) String token) {
