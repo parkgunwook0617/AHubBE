@@ -5,10 +5,7 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/mail")
@@ -16,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class MailController {
     private final MailService mailService;
 
-    @GetMapping("{email}")
-    public ResponseEntity<?> requestAuthcode(String email) throws MessagingException {
+    @GetMapping("/{email:.+}")
+    public ResponseEntity<?> requestAuthcode(@PathVariable("email") String email)
+            throws MessagingException {
         boolean isSend = mailService.sendSimpleMessage(email);
         return isSend
                 ? ResponseEntity.status(HttpStatus.OK).body("인증 코드가 전송되었습니다.")
