@@ -50,6 +50,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/user/**")
                                         .permitAll()
+                                        .requestMatchers("/mail/**")
+                                        .permitAll()
                                         .requestMatchers(
                                                 "/v3/api-docs/**", // API 명세 JSON 경로
                                                 "/swagger-ui/**", // Swagger UI 리소스

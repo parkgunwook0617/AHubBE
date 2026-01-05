@@ -24,7 +24,7 @@ public class AuthServiceTest {
     @Test
     @DisplayName("회원가입시 데이터가 DB에 잘 저장되는지 확인")
     void registerTest() {
-        authService.registerUser("testId", "testPassword");
+        authService.registerUser("testId", "testPassword", "test@email.com");
 
         Assertions.assertThat(userRepository.findById("testId").isPresent()).isTrue();
     }
@@ -33,8 +33,8 @@ public class AuthServiceTest {
     @DisplayName("중복된 ID가 존재할 시, 잘 막히는지 확인")
     void registerDuplicateTest() {
         try {
-            authService.registerUser("testId", "testPassword");
-            authService.registerUser("testId", "testPassword");
+            authService.registerUser("testId", "testPassword", "test@email.com");
+            authService.registerUser("testId", "testPassword", "test@email.com");
             Assertions.fail("중복 아이디이지만 예외가 발생하지 않았습니다.");
         } catch (IllegalArgumentException e) {
             Assertions.assertThat(e.getMessage()).contains("이미 사용 중인 아이디입니다.");
@@ -44,7 +44,7 @@ public class AuthServiceTest {
     @Test
     @DisplayName("JWT 토큰이 잘 발급되는지 확인")
     void jwtTokenTest() {
-        authService.registerUser("testId", "testPassword");
+        authService.registerUser("testId", "testPassword", "test@email.com");
         JwtToken jwtToken = authService.signIn("testId", "testPassword");
 
         Assertions.assertThat(jwtToken).isNotNull();
