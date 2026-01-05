@@ -1,10 +1,7 @@
 package ahubbe.ahubbe.entity;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,7 +32,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "animation_identifier"))
     @Getter
     @Setter
-    private List<AnimationInformation> favoriteAnimations = new ArrayList<>();
+    private Set<AnimationInformation> favoriteAnimations = new LinkedHashSet<>();
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(this.role.name()));
