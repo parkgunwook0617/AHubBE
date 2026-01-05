@@ -1,5 +1,7 @@
 package ahubbe.ahubbe.controller;
 
+import ahubbe.ahubbe.dto.EmailDto;
+import ahubbe.ahubbe.dto.ValidateEmailDto;
 import ahubbe.ahubbe.service.Mail.MailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,10 @@ public class MailController {
     }
 
     @PostMapping("validatemail")
-    public ResponseEntity<?> validEmail(String email, String authCode) {
+    public ResponseEntity<?> validEmail(@RequestBody ValidateEmailDto validateEmailDto) {
+        String email = validateEmailDto.getEmail();
+        String authCode = validateEmailDto.getAuthCode();
+
         boolean isValid = mailService.validateCode(email, authCode);
 
         return isValid
@@ -54,7 +59,10 @@ public class MailController {
     }
 
     @PostMapping("reset-password-request")
-    public ResponseEntity<?> requestPasswordReset(String email) throws MessagingException {
+    public ResponseEntity<?> requestPasswordReset(@RequestBody EmailDto emailDto)
+            throws MessagingException {
+        String email = emailDto.getEmail();
+
         try {
             mailService.sendResetMail(email);
             return ResponseEntity.ok("비밀번호 초기화 메일이 발송되었습니다.");
