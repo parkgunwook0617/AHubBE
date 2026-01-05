@@ -6,6 +6,8 @@ import ahubbe.ahubbe.dto.RegisterDto;
 import ahubbe.ahubbe.service.Auth.AuthService;
 import ahubbe.ahubbe.service.Auth.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,9 +17,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/auth")
@@ -53,8 +52,7 @@ public class AuthController {
             return ResponseEntity.ok("로그인 성공");
         } catch (BadCredentialsException | UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "LOGIN_FAIL",
-                            "message", "아이디 또는 비밀번호가 틀렸습니다."));
+                    .body(Map.of("error", "LOGIN_FAIL", "message", "아이디 또는 비밀번호가 틀렸습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "서버 오류가 발생했습니다."));

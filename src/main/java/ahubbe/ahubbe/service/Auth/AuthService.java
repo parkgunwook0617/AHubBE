@@ -4,6 +4,7 @@ import ahubbe.ahubbe.dto.JwtToken;
 import ahubbe.ahubbe.entity.Role;
 import ahubbe.ahubbe.entity.User;
 import ahubbe.ahubbe.repository.UserRepository;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,8 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +66,10 @@ public class AuthService {
     }
 
     public boolean checkUser(String id, String password) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+        User user =
+                userRepository
+                        .findById(id)
+                        .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
         if (user == null) return false;
 
         return passwordEncoder.matches(password, user.getPassword());
