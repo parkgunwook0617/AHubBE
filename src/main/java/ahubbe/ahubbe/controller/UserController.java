@@ -1,5 +1,6 @@
 package ahubbe.ahubbe.controller;
 
+import ahubbe.ahubbe.dto.TitleDto;
 import ahubbe.ahubbe.entity.AnimationInformation;
 import ahubbe.ahubbe.repository.AnimationRepository;
 import ahubbe.ahubbe.service.User.UserService;
@@ -49,7 +50,9 @@ public class UserController {
 
     @PostMapping("/saveFavorite")
     public ResponseEntity<?> saveFavoriteAnimationInformation(
-            @CookieValue(name = "accessToken") String token, String title) {
+            @CookieValue(name = "accessToken") String token, @RequestBody TitleDto titleDto) {
+        String title = titleDto.getTitle();
+
         userService.addFavorite(token, title);
 
         return ResponseEntity.ok("성공적으로 저장되었습니다.");
