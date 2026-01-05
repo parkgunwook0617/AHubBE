@@ -52,7 +52,7 @@ jobs:
         DB_PASSWORD: root
         JWT_SECRET: SldUX1RFU1RfS0VZX0ZPUl9DSV9CVUlMRF9QVVJQT1NFX0xPTkdfTE9OR19TVFJJTkdfT1ZFUl8zMl9CWVRFUwo=
         EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
-        PASSWORD_RESET_URL: https://port-0-ahubbe-mjqorq623e753992.sel3.cloudtype.app/mail/reset-execute?token=
+        PASSWORD_RESET_URL: http://localhost:8080/mail/reset-execute?token=
 
     - name: Add Coverage PR Comment
       uses: madrapps/jacoco-report@v1.7.1
