@@ -75,8 +75,7 @@ public class AuthController {
 
     @PostMapping("/validate")
     public ResponseEntity<?> validateToken(
-            @CookieValue(name = "accessToken", required = false) @RequestBody TokenDto tokenDto) {
-        String token = tokenDto.getToken();
+            @CookieValue(name = "accessToken", required = false) String token) {
 
         if (token == null || token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 존재하지 않습니다.");
