@@ -91,4 +91,20 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @PostMapping("/checkUser")
+    public ResponseEntity<?> checkUser(
+            @CookieValue(name = "accessToken") String token, String password) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+
+        String userId = authentication.getName();
+
+        boolean response = authService.checkUser(userId, password);
+
+        if (response) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }

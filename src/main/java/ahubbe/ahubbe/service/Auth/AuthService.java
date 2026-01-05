@@ -62,4 +62,11 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(newPassword));
         return true;
     }
+
+    public boolean checkUser(String id, String password) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return false;
+
+        return passwordEncoder.matches(password, user.getPassword());
+    }
 }
