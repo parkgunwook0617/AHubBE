@@ -1,8 +1,6 @@
 package ahubbe.ahubbe.controller;
 
-import ahubbe.ahubbe.dto.AuthDto;
-import ahubbe.ahubbe.dto.JwtToken;
-import ahubbe.ahubbe.dto.RegisterDto;
+import ahubbe.ahubbe.dto.*;
 import ahubbe.ahubbe.service.Auth.AuthService;
 import ahubbe.ahubbe.service.Auth.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
@@ -77,7 +75,9 @@ public class AuthController {
 
     @PostMapping("/validate")
     public ResponseEntity<?> validateToken(
-            @CookieValue(name = "accessToken", required = false) String token) {
+            @CookieValue(name = "accessToken", required = false) @RequestBody TokenDto tokenDto) {
+        String token = tokenDto.getToken();
+
         if (token == null || token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 존재하지 않습니다.");
         }
@@ -107,10 +107,11 @@ public class AuthController {
 
     @PatchMapping("/chagePassword")
     public ResponseEntity<?> changePassword(
-            @CookieValue(name = "accessToken") String token, String newPassword) {
+            @CookieValue(name = "accessToken") String token, @RequestBody PasswordDto passwordDto) {
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
 
         String userId = authentication.getName();
+        String newPassword = passwordDto.getPassword();
 
         boolean response = authService.changePassword(userId, newPassword);
 
@@ -123,10 +124,11 @@ public class AuthController {
 
     @PostMapping("/checkUser")
     public ResponseEntity<?> checkUser(
-            @CookieValue(name = "accessToken") String token, String password) {
+            @CookieValue(name = "accessToken") String token, @RequestBody PasswordDto passwordDto) {
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
 
         String userId = authentication.getName();
+        String password = passwordDto.getPassword();
 
         try {
             boolean isMatched = authService.checkUser(userId, password);
