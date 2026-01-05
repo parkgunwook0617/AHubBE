@@ -21,7 +21,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public void registerUser(String id, String password) {
+    public void registerUser(String id, String password, String email) {
         if (userRepository.findById(id).isPresent()) {
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
         }
@@ -29,6 +29,7 @@ public class AuthService {
         newUser.setId(id);
         newUser.setPassword(passwordEncoder.encode(password));
         newUser.setRole(Role.ROLE_USER);
+        newUser.setEmail(email);
         userRepository.save(newUser);
     }
 
@@ -68,5 +69,13 @@ public class AuthService {
         if (user == null) return false;
 
         return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    public boolean emailCheck(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    public boolean idCheck(String id) {
+        return userRepository.findById(id).isPresent();
     }
 }

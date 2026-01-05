@@ -18,6 +18,8 @@ public class User {
 
     @Setter @Getter private String password;
 
+    @Setter @Getter private String email;
+
     public User() {}
 
     @Setter
