@@ -4,6 +4,7 @@ import ahubbe.ahubbe.dto.*;
 import ahubbe.ahubbe.service.Auth.AuthService;
 import ahubbe.ahubbe.service.Auth.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +26,15 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping(path = "/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDto requestDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterDto requestDto) {
         authService.registerUser(
                 requestDto.getId(), requestDto.getPassword(), requestDto.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
     }
 
     @PostMapping(path = "/signIn")
-    public ResponseEntity<?> signin(@RequestBody AuthDto requestDto, HttpServletResponse response) {
+    public ResponseEntity<?> signin(
+            @Valid @RequestBody AuthDto requestDto, HttpServletResponse response) {
         try {
             JwtToken jwtToken = authService.signIn(requestDto.getId(), requestDto.getPassword());
 
@@ -106,7 +108,8 @@ public class AuthController {
 
     @PatchMapping("/chagePassword")
     public ResponseEntity<?> changePassword(
-            @CookieValue(name = "accessToken") String token, @RequestBody PasswordDto passwordDto) {
+            @CookieValue(name = "accessToken") String token,
+            @Valid @RequestBody PasswordDto passwordDto) {
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
 
         String userId = authentication.getName();
