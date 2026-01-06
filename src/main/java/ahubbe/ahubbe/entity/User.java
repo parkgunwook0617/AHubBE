@@ -40,7 +40,5 @@ public class User {
         return Collections.singletonList(new SimpleGrantedAuthority(this.role.name()));
     }
 
-    @Getter
-    @Setter
-    private String refreshToken;
+    @Getter @Setter private String refreshToken;
 }

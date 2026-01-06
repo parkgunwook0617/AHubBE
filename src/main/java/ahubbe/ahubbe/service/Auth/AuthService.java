@@ -44,8 +44,10 @@ public class AuthService {
 
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+        User user =
+                userRepository
+                        .findById(id)
+                        .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
 
         user.setRefreshToken(jwtToken.getRefreshToken());
 
@@ -57,8 +59,10 @@ public class AuthService {
         Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
         String userId = authentication.getName();
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
 
         if (!refreshToken.equals(user.getRefreshToken())) {
             throw new RuntimeException("토큰 정보가 일치하지 않습니다.");
@@ -73,8 +77,10 @@ public class AuthService {
 
     @Transactional
     public void signOut(String id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+        User user =
+                userRepository
+                        .findById(id)
+                        .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
 
         user.setRefreshToken(null);
     }

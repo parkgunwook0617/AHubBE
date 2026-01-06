@@ -7,5 +7,4 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class MailCleanUpSchedulerIntegrationTest {
-}
+public class MailCleanUpSchedulerIntegrationTest {}

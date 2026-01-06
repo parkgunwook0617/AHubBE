@@ -47,13 +47,14 @@ public class AuthController {
                             .maxAge(60 * 60)
                             .build();
 
-            ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", jwtToken.getRefreshToken())
-                    .httpOnly(true)
-                    .secure(true)
-                    .sameSite("None")
-                    .path("/")
-                    .maxAge(60 * 60 * 24 * 14)
-                    .build();
+            ResponseCookie refreshCookie =
+                    ResponseCookie.from("refreshToken", jwtToken.getRefreshToken())
+                            .httpOnly(true)
+                            .secure(true)
+                            .sameSite("None")
+                            .path("/")
+                            .maxAge(60 * 60 * 24 * 14)
+                            .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
@@ -75,26 +76,29 @@ public class AuthController {
 
         try {
             if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("리프레시 토큰이 만료되었거나 유효하지 않습니다.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("리프레시 토큰이 만료되었거나 유효하지 않습니다.");
             }
 
             JwtToken newTokens = authService.reissue(refreshToken);
 
-            ResponseCookie newAccessTokenCookie = ResponseCookie.from("accessToken", newTokens.getAccessToken())
-                    .httpOnly(true)
-                    .secure(true)
-                    .sameSite("None")
-                    .path("/")
-                    .maxAge(60 * 60)
-                    .build();
+            ResponseCookie newAccessTokenCookie =
+                    ResponseCookie.from("accessToken", newTokens.getAccessToken())
+                            .httpOnly(true)
+                            .secure(true)
+                            .sameSite("None")
+                            .path("/")
+                            .maxAge(60 * 60)
+                            .build();
 
-            ResponseCookie newRefreshTokenCookie = ResponseCookie.from("refreshToken", newTokens.getRefreshToken())
-                    .httpOnly(true)
-                    .secure(true)
-                    .sameSite("None")
-                    .path("/")
-                    .maxAge(60 * 60 * 24 * 14)
-                    .build();
+            ResponseCookie newRefreshTokenCookie =
+                    ResponseCookie.from("refreshToken", newTokens.getRefreshToken())
+                            .httpOnly(true)
+                            .secure(true)
+                            .sameSite("None")
+                            .path("/")
+                            .maxAge(60 * 60 * 24 * 14)
+                            .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, newAccessTokenCookie.toString());
             response.addHeader(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString());
@@ -107,8 +111,9 @@ public class AuthController {
     }
 
     @PostMapping(path = "/signOut")
-    public ResponseEntity<?> signout(@CookieValue(name = "accessToken", required = false) String token,
-                                     HttpServletResponse response) {
+    public ResponseEntity<?> signout(
+            @CookieValue(name = "accessToken", required = false) String token,
+            HttpServletResponse response) {
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
             String userId = jwtTokenProvider.getAuthentication(token).getName();
