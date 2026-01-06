@@ -6,8 +6,8 @@ import ahubbe.ahubbe.repository.AuthRepository;
 import ahubbe.ahubbe.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import java.util.Random;
-import java.util.UUID;
+import java.security.SecureRandom;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -39,6 +39,36 @@ public class MailService {
             key.append(characters.charAt(random.nextInt(characters.length())));
         }
         return key.toString();
+    }
+
+    public String createPasswordCode() {
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String specials = "!@#$%^*+=-";
+        String allChars = upper + lower + digits + specials;
+
+        SecureRandom random = new SecureRandom();
+        List<Character> passwordChars = new ArrayList<>();
+
+        passwordChars.add(upper.charAt(random.nextInt(upper.length())));
+        passwordChars.add(lower.charAt(random.nextInt(lower.length())));
+        passwordChars.add(digits.charAt(random.nextInt(digits.length())));
+        passwordChars.add(specials.charAt(random.nextInt(specials.length())));
+
+        int remainingLength = 10 - passwordChars.size();
+        for (int i = 0; i < remainingLength; i++) {
+            passwordChars.add(allChars.charAt(random.nextInt(allChars.length())));
+        }
+
+        Collections.shuffle(passwordChars);
+
+        StringBuilder result = new StringBuilder();
+        for (char c : passwordChars) {
+            result.append(c);
+        }
+
+        return result.toString();
     }
 
     public MimeMessage createMail(String mail, String authCode) throws MessagingException {
@@ -81,7 +111,7 @@ public class MailService {
                         .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 사용자가 없습니다."));
 
         String token = UUID.randomUUID().toString();
-        String tempPassword = createCode();
+        String tempPassword = createPasswordCode();
 
         authRepository.save(new Auth(targetEmail, token, tempPassword));
 
