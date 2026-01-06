@@ -17,7 +17,7 @@ public class MailCleanupScheduler {
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void cleanup() {
-        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(100);
+        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
 
         authRepository.deleteByCreatedDateBefore(fiveMinutesAgo);
 
