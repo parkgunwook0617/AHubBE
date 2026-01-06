@@ -47,7 +47,16 @@ public class AuthController {
                             .maxAge(60 * 60)
                             .build();
 
+            ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", jwtToken.getRefreshToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
+                    .path("/")
+                    .maxAge(60 * 60 * 24 * 14)
+                    .build();
+
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
             return ResponseEntity.ok("로그인 성공");
         } catch (BadCredentialsException | UsernameNotFoundException e) {
@@ -59,8 +68,53 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissue(
+            @CookieValue(name = "refreshToken", required = false) String refreshToken,
+            HttpServletResponse response) {
+
+        try {
+            if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("리프레시 토큰이 만료되었거나 유효하지 않습니다.");
+            }
+
+            JwtToken newTokens = authService.reissue(refreshToken);
+
+            ResponseCookie newAccessTokenCookie = ResponseCookie.from("accessToken", newTokens.getAccessToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
+                    .path("/")
+                    .maxAge(60 * 60)
+                    .build();
+
+            ResponseCookie newRefreshTokenCookie = ResponseCookie.from("refreshToken", newTokens.getRefreshToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
+                    .path("/")
+                    .maxAge(60 * 60 * 24 * 14)
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, newAccessTokenCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString());
+
+            return ResponseEntity.ok("토큰 재발급 성공");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 정보가 유효하지 않습니다.");
+        }
+    }
+
     @PostMapping(path = "/signOut")
-    public ResponseEntity<?> signout(HttpServletResponse response) {
+    public ResponseEntity<?> signout(@CookieValue(name = "accessToken", required = false) String token,
+                                     HttpServletResponse response) {
+
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            String userId = jwtTokenProvider.getAuthentication(token).getName();
+            authService.signOut(userId);
+        }
+
         ResponseCookie cookie =
                 ResponseCookie.from("accessToken", "")
                         .httpOnly(true)
@@ -70,7 +124,17 @@ public class AuthController {
                         .maxAge(0)
                         .build();
 
+        ResponseCookie refreshCookie =
+                ResponseCookie.from("refreshToken", "")
+                        .httpOnly(true)
+                        .secure(true)
+                        .sameSite("None")
+                        .path("/")
+                        .maxAge(0)
+                        .build();
+
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
         return ResponseEntity.ok("로그아웃 성공");
     }

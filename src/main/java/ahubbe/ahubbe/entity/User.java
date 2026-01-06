@@ -39,4 +39,8 @@ public class User {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(this.role.name()));
     }
+
+    @Getter
+    @Setter
+    private String refreshToken;
 }

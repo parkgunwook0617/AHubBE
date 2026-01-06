@@ -1,4 +1,4 @@
-package ahubbe.ahubbe;
+package ahubbe.ahubbe.Integration;
 
 import ahubbe.ahubbe.dto.JwtToken;
 import ahubbe.ahubbe.repository.AuthRepository;
@@ -15,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
-public class AuthServiceTest {
+public class AuthServiceIntegrationTest {
 
     @Autowired private AuthService authService;
 

@@ -28,7 +28,7 @@ public class MailService {
     private String passwordResetUrl;
 
     @Value("${spring.mail.username}")
-    private static String senderEmail;
+    private String senderEmail;
 
     public String createCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

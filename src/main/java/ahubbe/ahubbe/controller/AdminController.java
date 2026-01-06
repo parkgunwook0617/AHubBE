@@ -5,6 +5,8 @@ import ahubbe.ahubbe.entity.AnimationInformation;
 import ahubbe.ahubbe.repository.AnimationRepository;
 import ahubbe.ahubbe.service.Admin.AdminService;
 import java.util.List;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,8 @@ public class AdminController {
         return adminService.getAnimeDetailElements(year, quarter, "title");
     }
 
-    @GetMapping(path = "/selfInquiry")
-    public AnimationInformation selfInquiry(AnimeDto animeDto, String year, String quarter) {
+    @PostMapping(path = "/selfInquiry")
+    public AnimationInformation selfInquiry(@Valid AnimeDto animeDto, String year, String quarter) {
         return adminService.saveSingleAnimeData(animeDto, year, quarter);
     }
 
