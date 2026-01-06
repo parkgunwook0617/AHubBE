@@ -25,7 +25,7 @@ public class AdminController {
 
     @GetMapping(path = "/selfInquiry")
     public AnimationInformation selfInquiry(AnimeDto animeDto, String year, String quarter) {
-        return adminService.saveSingleAnimeData(animeDto, quarter, "title");
+        return adminService.saveSingleAnimeData(animeDto, year, quarter);
     }
 
     @PostMapping(path = "/animeDataUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

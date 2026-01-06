@@ -4,6 +4,7 @@ import ahubbe.ahubbe.dto.EmailDto;
 import ahubbe.ahubbe.dto.ValidateEmailDto;
 import ahubbe.ahubbe.service.Mail.MailService;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class MailController {
     }
 
     @PostMapping("validatemail")
-    public ResponseEntity<?> validEmail(@RequestBody ValidateEmailDto validateEmailDto) {
+    public ResponseEntity<?> validEmail(@Valid @RequestBody ValidateEmailDto validateEmailDto) {
         String email = validateEmailDto.getEmail();
         String authCode = validateEmailDto.getAuthCode();
 
@@ -59,7 +60,7 @@ public class MailController {
     }
 
     @PostMapping("reset-password-request")
-    public ResponseEntity<?> requestPasswordReset(@RequestBody EmailDto emailDto)
+    public ResponseEntity<?> requestPasswordReset(@Valid @RequestBody EmailDto emailDto)
             throws MessagingException {
         String email = emailDto.getEmail();
 
