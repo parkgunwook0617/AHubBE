@@ -31,7 +31,6 @@ public class SecurityConfig {
                                                             .CorsConfiguration();
                                             corsConfiguration.setAllowedOrigins(
                                                     java.util.List.of(
-                                                            "http://localhost:5173",
                                                             "https://ahubtest.vercel.app"));
                                             corsConfiguration.setAllowedMethods(
                                                     java.util.List.of(
@@ -46,12 +45,16 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth ->
-                                auth.requestMatchers("/auth/**")
+                                auth.requestMatchers(
+                                                "/auth/signIn",
+                                                "/auth/register",
+                                                "/auth/checkId",
+                                                "/auth/checkEmail")
                                         .permitAll()
                                         .requestMatchers("/admin/**")
-                                        .permitAll()
+                                        .hasRole("ADMIN")
                                         .requestMatchers("/user/**")
-                                        .permitAll()
+                                        .hasAnyRole("USER", "ADMIN")
                                         .requestMatchers("/mail/**")
                                         .permitAll()
                                         .requestMatchers(
@@ -59,7 +62,7 @@ public class SecurityConfig {
                                                 "/swagger-ui/**", // Swagger UI 리소스
                                                 "/swagger-ui.html" // Swagger UI 접속 페이지
                                                 )
-                                        .permitAll()
+                                        .hasRole("ADMIN")
                                         .anyRequest()
                                         .authenticated())
                 .addFilterBefore(
