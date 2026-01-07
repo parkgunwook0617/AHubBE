@@ -93,7 +93,6 @@ public class MailService {
         MimeMessage message = createMail(targetEmail, authCode);
         try {
             mailSender.send(message);
-            Auth auth = authRepository.findByEmail(targetEmail);
 
             authRepository.deleteByEmail(targetEmail);
             authRepository.save(new Auth(targetEmail, authCode));
@@ -105,10 +104,9 @@ public class MailService {
     }
 
     public void sendResetMail(String targetEmail) throws MessagingException {
-        User user =
-                userRepository
-                        .findByEmail(targetEmail)
-                        .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 사용자가 없습니다."));
+        userRepository
+                .findByEmail(targetEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 사용자가 없습니다."));
 
         String token = UUID.randomUUID().toString();
         String tempPassword = createPasswordCode();

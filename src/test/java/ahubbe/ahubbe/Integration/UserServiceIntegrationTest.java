@@ -58,13 +58,13 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("데이터 전조회가 잘 되는지 확인")
-    void allDataQuery() {
+    void allDataQueryTest() {
         Assertions.assertThat(userService.importAnimationInformation().size()).isEqualTo(81);
     }
 
     @Test
     @DisplayName("제목 조회가 잘 되는지 확인")
-    void specificTitleDataQuery() {
+    void specificTitleDataQueryTest() {
         Assertions.assertThat(userService.importAllAnimationInformationByTitle("판").size())
                 .isEqualTo(2);
         Assertions.assertThat(userService.importAllAnimationInformationByTitle("s").size())
@@ -75,7 +75,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("장르 조회가 잘 되는지 확인")
-    void specificGenreQuery() {
+    void specificGenreQueryTest() {
         Assertions.assertThat(userService.importAnimationInformationByGenre("판타지").size())
                 .isEqualTo(16);
         Assertions.assertThat(userService.importAnimationInformationByGenre("하렘").size())
@@ -86,7 +86,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("연도 조회가 잘 되는지 확인")
-    void specificReleaseYearQuery() {
+    void specificReleaseYearQueryTest() {
         Assertions.assertThat(userService.importAnimationInformationByReleaseYear("2025").size())
                 .isEqualTo(81);
         Assertions.assertThat(userService.importAnimationInformationByReleaseYear("2024").size())
@@ -95,7 +95,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("분기 조회가 잘 되는지 확인")
-    void specificReleaseQuarterQuery() {
+    void specificReleaseQuarterQueryTest() {
         Assertions.assertThat(userService.importAnimationInformationByReleaseQuarter("2").size())
                 .isEqualTo(81);
         Assertions.assertThat(userService.importAnimationInformationByReleaseQuarter("1").size())
@@ -108,7 +108,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("단일 제목 조회가 잘 되는지 확인")
-    void singleSpecificTitleQuery() {
+    void singleSpecificTitleQueryTest() {
         AnimationInformation targetData =
                 userService
                         .importSingleAnimationInformationByTitle("Summer Pockets/애니메이션")
@@ -121,7 +121,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("유저에게 애니메이션 정보가 잘 저장되는지 확인")
-    void checkFavoriteAnimationSave() {
+    void checkFavoriteAnimationSaveTest() {
         userService.addFavorite(extractedToken, "기동전사 건담 지쿠악스");
         userService.addFavorite(extractedToken, "시운지 가의 아이들/애니메이션");
 
@@ -147,7 +147,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("유저에게 애니메이션 정보가 잘 제거되는지 확인")
-    void checkFavoriteAnimationRemove() {
+    void checkFavoriteAnimationRemoveTest() {
         userService.addFavorite(extractedToken, "기동전사 건담 지쿠악스");
 
         Set<AnimationInformation> data = userService.getFavorite(extractedToken);
@@ -176,7 +176,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("없는 유저의 선호 등록 및 삭제가 잘 방지되는지 확인")
-    void checkNonExistUserAnimatioNSaveAndAdd() {
+    void checkNonExistUserAnimatioNSaveAndAddTest() {
         Assertions.assertThatThrownBy(() -> userService.getFavorite("wrong"))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("유효하지 않은 토큰입니다.");
@@ -188,7 +188,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("없는 유저의 선호 등록 및 삭제가 잘 방지되는지 확인")
-    void checkUserRemoveNonExistAnimatioNSaveAndAdd() {
+    void checkUserRemoveNonExistAnimatioNSaveAndAddTest() {
         Assertions.assertThatThrownBy(() -> userService.removeFavorite(extractedToken, "title"))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("애니메이션 정보를 찾을 수 없습니다.");
@@ -196,7 +196,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     @DisplayName("장르 목록 조회가 잘 되는지 확인")
-    void GenreListQuery() {
+    void GenreListQueryTest() {
         Assertions.assertThat(userService.getGenreList().size()).isEqualTo(85);
     }
 }

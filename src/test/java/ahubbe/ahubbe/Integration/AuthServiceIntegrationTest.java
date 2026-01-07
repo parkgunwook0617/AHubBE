@@ -1,11 +1,12 @@
 package ahubbe.ahubbe.Integration;
 
 import ahubbe.ahubbe.dto.JwtToken;
-import ahubbe.ahubbe.repository.AuthRepository;
+import ahubbe.ahubbe.entity.User;
 import ahubbe.ahubbe.repository.UserRepository;
 import ahubbe.ahubbe.service.Auth.AuthService;
 import ahubbe.ahubbe.service.Auth.JwtTokenProvider;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -27,7 +31,7 @@ public class AuthServiceIntegrationTest {
     @Autowired private UserRepository userRepository;
 
     @Autowired private JwtTokenProvider jwtTokenProvider;
-    @Autowired private AuthRepository authRepository;
+
     @Autowired private PasswordEncoder passwordEncoder;
 
     @BeforeEach
@@ -61,7 +65,92 @@ public class AuthServiceIntegrationTest {
 
         Assertions.assertThat(token).isNotNull();
         Assertions.assertThat(token.getAccessToken()).isNotEmpty();
+        Assertions.assertThat(token.getRefreshToken()).isNotEmpty();
         Assertions.assertThat(token.getGrantType()).isEqualTo("Bearer");
+    }
+
+    @Test
+    @DisplayName("토큰 재발급이 되는지 확인")
+    void reissueTest() throws InterruptedException {
+        JwtToken oldJwttoken = authService.signIn("baseUser", "password");
+
+        String oldAccessToken = oldJwttoken.getAccessToken();
+        String oldRefreshToken = oldJwttoken.getRefreshToken();
+
+        Thread.sleep(1000);
+
+        JwtToken refreshedTokens = authService.reissue(oldRefreshToken);
+
+        Assertions.assertThat(refreshedTokens).isNotNull();
+        Assertions.assertThat(refreshedTokens.getAccessToken()).isNotEmpty();
+        Assertions.assertThat(refreshedTokens.getRefreshToken()).isNotEmpty();
+        Assertions.assertThat(refreshedTokens.getGrantType()).isEqualTo("Bearer");
+
+        Assertions.assertThat(refreshedTokens.getAccessToken()).isNotEqualTo(oldAccessToken);
+        Assertions.assertThat(refreshedTokens.getRefreshToken()).isNotEqualTo(oldRefreshToken);
+
+        User user = userRepository.findById("baseUser").orElseThrow();
+
+        Assertions.assertThat(user.getRefreshToken()).isEqualTo(refreshedTokens.getRefreshToken());
+        Assertions.assertThat(user.getRefreshToken()).isNotEqualTo(oldRefreshToken);
+    }
+
+    @Test
+    @DisplayName("토큰 재발급을 잘못된 토큰으로 시도할 시 잘 처리되는지 확인")
+    void reissueWrongTokenTest() throws InterruptedException {
+
+        Authentication auth =
+                new UsernamePasswordAuthenticationToken(
+                        "baseUser", "", List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
+        JwtToken jwtToken = jwtTokenProvider.generateToken(auth);
+        String wrongToken = jwtToken.getAccessToken();
+
+        Thread.sleep(1000);
+
+        Assertions.assertThatThrownBy(
+                        () -> {
+                            authService.reissue(wrongToken);
+                        })
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("토큰 정보가 일치하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("토큰 재발급을 잘못된 유저로 시도할 시 잘 처리되는지 확인")
+    void reissueWrongUserTest() throws InterruptedException {
+
+        Authentication auth =
+                new UsernamePasswordAuthenticationToken(
+                        "ghostUser", "", List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
+        JwtToken jwtToken = jwtTokenProvider.generateToken(auth);
+        String wrongToken = jwtToken.getAccessToken();
+
+        Thread.sleep(1000);
+
+        Assertions.assertThatThrownBy(
+                        () -> {
+                            authService.reissue(wrongToken);
+                        })
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("사용자를 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("로그아웃이 잘 되는지 확인")
+    void signOutTest() {
+        User user = userRepository.findById("baseUser").orElseThrow();
+
+        Assertions.assertThat(user.getRefreshToken()).isNull();
+
+        authService.signIn("baseUser", "password");
+
+        Assertions.assertThat(user.getRefreshToken()).isNotNull();
+
+        authService.signOut("baseUser");
+
+        Assertions.assertThat(user.getRefreshToken()).isNull();
     }
 
     @Test
@@ -125,25 +214,25 @@ public class AuthServiceIntegrationTest {
 
     @Test
     @DisplayName("해당하는 이메일을 가진 유저가 있는 경우")
-    void checkEmail() {
+    void checkEmailTest() {
         Assertions.assertThat(authService.emailCheck("base@email.com")).isTrue();
     }
 
     @Test
     @DisplayName("해당하는 이메일을 가진 유저가 없는 경우")
-    void checkNonExistEmail() {
+    void checkNonExistEmailTest() {
         Assertions.assertThat(authService.emailCheck("ghost@email.com")).isFalse();
     }
 
     @Test
     @DisplayName("해당하는 아이디를 가진 유저가 있는 경우")
-    void checkId() {
+    void checkIdTest() {
         Assertions.assertThat(authService.idCheck("baseUser")).isTrue();
     }
 
     @Test
     @DisplayName("해당하는 아이디를 가진 유저가 없는 경우")
-    void checkNonExistId() {
+    void checkNonExistIdTest() {
         Assertions.assertThat(authService.idCheck("ghost")).isFalse();
     }
 
