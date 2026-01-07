@@ -1,4 +1,4 @@
-package ahubbe.ahubbe.service;
+package ahubbe.ahubbe.service.Auth;
 
 import ahubbe.ahubbe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,8 @@ public class CustomUserDatailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        return userRepository.findById(id)
+        return userRepository
+                .findById(id)
                 .map(this::createUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
     }
@@ -23,7 +24,7 @@ public class CustomUserDatailService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getId())
                 .password(user.getPassword())
-                .roles(user.getAuthorities().toString())
+                .authorities(user.getAuthorities())
                 .build();
     }
 }
