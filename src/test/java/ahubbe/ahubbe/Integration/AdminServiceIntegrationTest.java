@@ -36,6 +36,31 @@ public class AdminServiceIntegrationTest {
         String testYear = "2025";
         String testQuarter = "1";
         adminService.saveSingleAnimeData(animeDto, testYear, testQuarter);
+
+        Assertions.assertThat(animationRepository.findByTitle("testTitle")).isPresent();
+        Assertions.assertThat(animationRepository.findByTitle("testTitle").get().getReleaseYear())
+                .containsOnly(2025);
+        Assertions.assertThat(
+                        animationRepository.findByTitle("testTitle").get().getReleaseQuarter())
+                .containsOnly(1);
+    }
+
+    @Test
+    @DisplayName("수동 저장에서 한 애니메이션의 분기가 여러개일 때, DB에 잘 저장되는지 확인")
+    void selfInquiryMultipleTest() {
+        AnimeDto animeDto = new AnimeDto("testTitle", "testKeyVisual", List.of("test"));
+        String testYear = "2025";
+        String testQuarter = "1";
+        String testQuarter2 = "2";
+        adminService.saveSingleAnimeData(animeDto, testYear, testQuarter);
+        adminService.saveSingleAnimeData(animeDto, testYear, testQuarter2);
+
+        Assertions.assertThat(animationRepository.findByTitle("testTitle")).isPresent();
+        Assertions.assertThat(animationRepository.findByTitle("testTitle").get().getReleaseYear())
+                .containsOnly(2025);
+        Assertions.assertThat(
+                        animationRepository.findByTitle("testTitle").get().getReleaseQuarter())
+                .contains(1, 2);
     }
 
     @Test

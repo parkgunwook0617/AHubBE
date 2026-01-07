@@ -195,7 +195,8 @@ public class AuthController {
 
     @PostMapping("/checkUser")
     public ResponseEntity<?> checkUser(
-            @CookieValue(name = "accessToken") String token, @RequestBody PasswordDto passwordDto) {
+            @CookieValue(name = "accessToken") String token,
+            @Valid @RequestBody PasswordDto passwordDto) {
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
 
         String userId = authentication.getName();
