@@ -16,6 +16,7 @@
 ## Dependencies
 | Category | Library | Version | Description |
 | :--- | :--- | :--- | :--- |
+| **Framework** | **Spring Framework** | 7.0.2 | IoC/DI 컨테이너 및 핵심 프로그래밍 모델의 근간 제공 |
 | **Framework** | **Spring Boot** | 4.0.1 | 프로젝트 전반의 자동 설정 및 내장 서버 제공 |
 | **Language** | **Java** | 17 (LTS) | 현대적인 자바 문법과 안정적인 런타임 환경 제공 |
 | **Security** | **Spring Security** | - | 인증(Authentication) 및 인가(Authorization) 처리를 위한 보안 프레임워크 |
