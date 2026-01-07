@@ -13,6 +13,23 @@
 <img src="https://img.shields.io/badge/cloudtype-000000?style=flat-square&logo=cloudtype&logoColor=white"/>
 <img src="https://img.shields.io/badge/google%20smtp-4285F4?style=flat-square&logo=gmail&logoColor=white"/>
 
+## Dependencies
+| Category | Library | Version | Description |
+| :--- | :--- | :--- | :--- |
+| **Framework** | **Spring Boot** | 4.0.1 | 프로젝트 전반의 자동 설정 및 내장 서버 제공 |
+| **Language** | **Java** | 17 (LTS) | 현대적인 자바 문법과 안정적인 런타임 환경 제공 |
+| **Security** | **Spring Security** | - | 인증(Authentication) 및 인가(Authorization) 처리를 위한 보안 프레임워크 |
+| **Auth (JWT)** | **JJWT** | 0.11.5 | 무상태(Stateless) 서버를 위한 JWT 토큰 생성 및 검증 라이브러리 |
+| **Persistence** | **Spring Data JPA** | - | 인터페이스 기반의 데이터 접근 계층 구현 및 ORM 지원 |
+| **Database** | **MariaDB** | - | 상용 환경의 메인 관계형 데이터베이스 (Connector/J 활용) |
+| **Test DB** | **H2 Database** | - | 테스트 코드 및 로컬 개발 환경용 인메모리 데이터베이스 |
+| **API Docs** | **Springdoc OpenAPI** | 2.2.0 | Swagger UI를 통한 대화형 API 명세서 자동 생성 및 테스트 |
+| **Mail** | **Spring Mail** | - | Google SMTP 연동을 통한 이메일 발송 기능 지원 |
+| **Crawler** | **JSoup** | 1.21.2 | 외부 웹 데이터 추출을 위한 HTML 파싱 및 조작 라이브러리 |
+| **Productivity** | **Lombok** | - | Getter, Setter 등 반복되는 상용구 코드 자동 생성 |
+| **Validation** | **Validation** | - | DTO 객체의 필드값 유효성 검증 라이브러리 |
+| **Code Quality** | **JaCoCo** | 0.8.12 | 테스트 코드 실행 결과 및 코드 커버리지 리포트 생성 도구 |
+| **Lint / Format** | **Spotless** | 6.23.3 | Google Java Format 기반 코드 스타일 자동 정렬 및 검사 |
 
 ## Page Overview
 <table style="width:100%; text-align:center; vertical-align:middle;">
